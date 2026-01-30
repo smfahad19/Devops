@@ -7,8 +7,6 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // let fahad = 'Un used Variable';
-
   useEffect(() => {
     const fetchData = async () => {
       try {
