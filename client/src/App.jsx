@@ -1,26 +1,28 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const App = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  let fahad = 'Un used Variable';
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
 
-        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000/home";
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000/home';
 
         const response = await fetch(apiUrl);
         if (!response.ok) {
-          throw new Error("URl Error not Getting response from URL");
+          throw new Error('URl Error not Getting response from URL');
         }
         const data = await response.json();
         if (!data) {
-          throw new Error("Data Erorr");
+          throw new Error('Data Erorr');
         }
 
         setUserData(data);
@@ -33,7 +35,6 @@ const App = () => {
     };
     fetchData();
   }, []);
-
 
   if (loading) return <h1>Please Wait Loading is in progress</h1>;
   if (error) return <h1>Error Occured in The Server</h1>;
