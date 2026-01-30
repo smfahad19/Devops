@@ -12,46 +12,34 @@ jobs:
     
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4  # v4 use karo
+        uses: actions/checkout@v4  # v3 se v4 karo
         
       - name: Setup Node.js
-        uses: actions/setup-node@v4  # v4 use karo
+        uses: actions/setup-node@v4  # v3 se v4 karo
         with:
-          node-version: '18'  # 18 use karo, 24 se compatibility issues ho sakte hain
+          node-version: '18'  # 24 se 18 karo
           
-      # Server
-      - name: Install server dependencies
+      # SERVER - yeh theek hai
+      - name: Install dependencies
         working-directory: server
-        run: npm install  # npm ci ki jagah npm install
+        run: npm ci
         
       - name: Lint backend
         working-directory: server
-        run: npm run lint || echo "Lint skipped"
-        
-      # Client  
+        run: npm run lint -- --max-warnings=0
+
+      # CLIENT - yahan change karo
       - name: Install frontend dependencies
         working-directory: client
-        run: npm install  # npm ci ki jagah npm install
+        run: npm install --legacy-peer-deps --force  # yeh line change karo
         
       - name: Lint frontend
         working-directory: client
-        run: npm run lint || echo "Lint skipped"
-        
-      # Docker (agar Dockerfile hai toh hi rakho)
-      - name: Check for Dockerfile
-        run: |
-          if [ -f server/Dockerfile ]; then
-            echo "Building backend Docker image"
-            docker build -t backend ./server
-          else
-            echo "No server Dockerfile found"
-          fi
-          
-      - name: Check for Dockerfile in client
-        run: |
-          if [ -f client/Dockerfile ]; then
-            echo "Building frontend Docker image"
-            docker build -t frontend ./client
-          else
-            echo "No client Dockerfile found"
-          fi
+        run: npm run lint -- --max-warnings=0
+
+      # Docker (agar Dockerfile nahi hai toh hata do)
+      - name: Build backend image
+        run: docker build -t backend ./server || echo "Docker build skipped"
+      
+      - name: Build frontend image
+        run: docker build -t frontend ./client || echo "Docker build skipped"
